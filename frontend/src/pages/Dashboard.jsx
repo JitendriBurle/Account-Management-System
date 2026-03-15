@@ -7,16 +7,28 @@ const Dashboard = () => {
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
+
     const fetchBalance = async () => {
-      const res = await API.get("/account/balance");
-      setBalance(res.data.balance);
+      try {
+
+        const res = await API.get("/account/balance", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+
+        setBalance(res.data.balance);
+
+      } catch (err) {
+        console.error("Balance fetch error:", err.response?.data || err.message);
+      }
     };
 
     fetchBalance();
+
   }, []);
 
   return (
-
     <div className="min-h-screen bg-gray-100 p-8">
 
       <h1 className="text-3xl font-bold mb-8 text-center">
